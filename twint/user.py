@@ -18,10 +18,10 @@ User_formats = {
 # ur object must be a json from the endpoint https://api.twitter.com/graphql
 def User(ur):
     logme.debug(__name__ + ':User')
-    if 'data' not in ur and 'user' not in ur['data']:
+    if 'data' not in ur or 'user' not in ur['data']:
         msg = 'malformed json! cannot be parsed to get user data'
-        logme.fatal(msg)
-        raise KeyError(msg)
+        if 'errors' in ur:
+            msg = ur['errors'][0]['message']
     _usr = user()
     _usr.id = ur['data']['user']['rest_id']
     _usr.name = ur['data']['user']['legacy']['name']
